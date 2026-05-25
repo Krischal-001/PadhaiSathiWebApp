@@ -4,6 +4,7 @@ require("dotenv").config();
 // Import packages
 const express = require("express");
 const cors = require("cors");
+const pool = require("./src/config/db");
 
 // Create express app
 const app = express();
@@ -11,6 +12,17 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+
+// DATABASE CONNECTION TEST
+pool.connect()
+  .then(() => {
+    console.log("PostgreSQL Connected");
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
+
 
 // Test route
 app.get("/", (req, res) => {
