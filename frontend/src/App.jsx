@@ -4,6 +4,9 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
+import CreateProfile from './pages/CreateProfile'
+import ViewProfile from './pages/ViewProfile'
+import EditProfile from './pages/EditProfile'
 
 function App() {
   return (
@@ -15,6 +18,18 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={
             <ProtectedRoute><Dashboard /></ProtectedRoute>
+          } />
+          <Route path="/profile/create" element={
+            <ProtectedRoute><CreateProfile /></ProtectedRoute>
+          } />
+          <Route path="/profile/me" element={
+            <ProtectedRoute><ViewProfile /></ProtectedRoute>
+          } />
+          <Route path="/profile/edit" element={
+            <ProtectedRoute><EditProfile /></ProtectedRoute>
+          } />
+          <Route path="/profile/:id" element={
+            <ProtectedRoute><ViewProfile /></ProtectedRoute>
           } />
         </Routes>
       </AuthProvider>
