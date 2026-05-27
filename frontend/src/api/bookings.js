@@ -17,25 +17,11 @@ export const getMyBookings = async () => {
   return res.json();
 };
 
-export const getBookingById = async (id) => {
-  const res = await fetch(`${API_URL}/bookings/${id}`, {
-    headers: { Authorization: `Bearer ${getToken()}` },
-  });
-  return res.json();
-};
-
 export const updateBookingStatus = async (id, status) => {
   const res = await fetch(`${API_URL}/bookings/${id}/status`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
     body: JSON.stringify({ status }),
-  });
-  return res.json();
-};
-
-export const getTutorBookings = async (tutor_id) => {
-  const res = await fetch(`${API_URL}/bookings/tutor/${tutor_id}`, {
-    headers: { Authorization: `Bearer ${getToken()}` },
   });
   return res.json();
 };

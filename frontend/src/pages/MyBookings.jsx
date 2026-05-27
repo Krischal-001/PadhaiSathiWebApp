@@ -41,111 +41,96 @@ export default function MyBookings() {
   }, {});
 
   return (
-    <div style={styles.page}>
-      <div style={styles.topBar}>
-        <button style={styles.backBtn} onClick={() => navigate("/dashboard")}>← Dashboard</button>
-        <h2 style={styles.title}>My Bookings</h2>
-        <span style={styles.count}>{bookings.length} total</span>
+    <div style={S.page}>
+      <div style={S.topBar}>
+        <button style={S.backBtn} onClick={() => navigate("/dashboard")}>Back to Dashboard</button>
+        <h2 style={S.title}>My Bookings</h2>
+        <span style={S.countText}>{bookings.length} total</span>
       </div>
 
-      <div style={styles.filterRow}>
+      <div style={S.filterRow}>
         {filters.map((f) => (
           <button
             key={f}
-            style={{
-              ...styles.filterBtn,
-              background: filter === f ? "#4f46e5" : "#f3f4f6",
-              color: filter === f ? "#fff" : "#374151",
-            }}
+            style={{ ...S.filterBtn, background: filter === f ? "#4f46e5" : "#f3f4f6", color: filter === f ? "#fff" : "#374151" }}
             onClick={() => setFilter(f)}
           >
             {f.charAt(0).toUpperCase() + f.slice(1)}
-            {counts[f] > 0 && <span style={{ ...styles.countBadge, background: filter === f ? "rgba(255,255,255,0.3)" : "#e5e7eb" }}>{counts[f]}</span>}
+            {counts[f] > 0 && (
+              <span style={{ ...S.countBadge, background: filter === f ? "rgba(255,255,255,0.25)" : "#e5e7eb" }}>
+                {counts[f]}
+              </span>
+            )}
           </button>
         ))}
       </div>
 
       {loading ? (
-        <div style={styles.emptyBox}><p style={styles.muted}>Loading bookings...</p></div>
+        <div style={S.emptyBox}><p style={S.muted}>Loading bookings...</p></div>
       ) : filtered.length === 0 ? (
-        <div style={styles.emptyBox}>
-          <p style={{ fontSize: 32, margin: "0 0 12px" }}>📅</p>
-          <p style={styles.muted}>No {filter === "all" ? "" : filter} bookings found.</p>
+        <div style={S.emptyBox}>
+          <div style={{ fontSize: 40, marginBottom: 12 }}>&#128197;</div>
+          <p style={S.muted}>No {filter === "all" ? "" : filter} bookings found.</p>
         </div>
       ) : (
-        <div style={styles.list}>
+        <div style={S.list}>
           {filtered.map((b) => {
             const isTutor = b.tutor_id === user?.id;
             const otherName = isTutor ? b.student_name : b.tutor_name;
             const otherEmail = isTutor ? b.student_email : b.tutor_email;
             const sc = STATUS_STYLE[b.status] || STATUS_STYLE.pending;
-            const date = new Date(b.booking_date).toLocaleDateString("en-US", { weekday: "short", year: "numeric", month: "short", day: "numeric" });
+            const date = new Date(b.booking_date).toLocaleDateString("en-US", {
+              weekday: "short", year: "numeric", month: "short", day: "numeric",
+            });
 
             return (
-              <div key={b.id} style={styles.card}>
-                <div style={styles.cardHeader}>
-                  <div style={styles.cardLeft}>
-                    <div style={styles.roleTag}>{isTutor ? "Student" : "Tutor"}</div>
+              <div key={b.id} style={S.card}>
+                <div style={S.cardHeader}>
+                  <div style={S.cardLeft}>
+                    <div style={S.roleTag}>{isTutor ? "Student" : "Tutor"}</div>
                     <div>
-                      <p style={styles.personName}>{otherName}</p>
-                      <p style={styles.personEmail}>{otherEmail}</p>
+                      <p style={S.personName}>{otherName}</p>
+                      <p style={S.personEmail}>{otherEmail}</p>
                     </div>
                   </div>
-                  <span style={{ ...styles.statusBadge, background: sc.bg, color: sc.color }}>
+                  <span style={{ ...S.statusBadge, background: sc.bg, color: sc.color }}>
                     {b.status}
                   </span>
                 </div>
 
-                <div style={styles.cardBody}>
-                  <div style={styles.metaGrid}>
-                    <div style={styles.metaItem}>
-                      <span style={styles.metaIcon}>📅</span>
-                      <span>{date}</span>
-                    </div>
-                    <div style={styles.metaItem}>
-                      <span style={styles.metaIcon}>🕐</span>
-                      <span>{b.start_time} – {b.end_time}</span>
-                    </div>
-                    {b.subject_name && (
-                      <div style={styles.metaItem}>
-                        <span style={styles.metaIcon}>📚</span>
-                        <span>{b.subject_name}</span>
-                      </div>
-                    )}
-                    {b.hourly_rate && (
-                      <div style={styles.metaItem}>
-                        <span style={styles.metaIcon}>💰</span>
-                        <span>NPR {b.hourly_rate}/hr</span>
-                      </div>
-                    )}
+                <div style={S.cardBody}>
+                  <div style={S.metaGrid}>
+                    <div style={S.metaItem}><span style={S.metaIcon}>&#128197;</span><span>{date}</span></div>
+                    <div style={S.metaItem}><span style={S.metaIcon}>&#128336;</span><span>{b.start_time} - {b.end_time}</span></div>
+                    {b.subject_name && <div style={S.metaItem}><span style={S.metaIcon}>&#128218;</span><span>{b.subject_name}</span></div>}
+                    {b.hourly_rate && <div style={S.metaItem}><span style={S.metaIcon}>&#128176;</span><span>NPR {b.hourly_rate}/hr</span></div>}
                   </div>
-
                   {b.message && (
-                    <div style={styles.messageBox}>
-                      <p style={styles.messageText}>"{b.message}"</p>
+                    <div style={S.messageBox}>
+                      <p style={S.messageText}>"{b.message}"</p>
                     </div>
                   )}
                 </div>
 
-                <div style={styles.cardActions}>
+                <div style={S.cardActions}>
                   {isTutor && b.status === "pending" && (
                     <>
-                      <button style={styles.confirmBtn} disabled={updating === b.id} onClick={() => handleStatus(b.id, "confirmed")}>
-                        {updating === b.id ? "..." : "✓ Confirm"}
+                      <button style={S.confirmBtn} disabled={updating === b.id} onClick={() => handleStatus(b.id, "confirmed")}>
+                        {updating === b.id ? "..." : "Confirm"}
                       </button>
-                      <button style={styles.declineBtn} disabled={updating === b.id} onClick={() => handleStatus(b.id, "cancelled")}>
-                        ✕ Decline
+                      <button style={S.declineBtn} disabled={updating === b.id} onClick={() => handleStatus(b.id, "cancelled")}>
+                        Decline
                       </button>
                     </>
                   )}
                   {isTutor && b.status === "confirmed" && (
-                    <button style={styles.completeBtn} disabled={updating === b.id} onClick={() => handleStatus(b.id, "completed")}>
-                      {updating === b.id ? "..." : "✓ Mark Complete"}
+                    <button style={S.completeBtn} disabled={updating === b.id} onClick={() => handleStatus(b.id, "completed")}>
+                      {updating === b.id ? "..." : "Mark Complete"}
                     </button>
                   )}
                   {!isTutor && b.status === "pending" && (
-                    <button style={styles.declineBtn} disabled={updating === b.id} onClick={() => handleStatus(b.id, "cancelled")}>
-                      {updating === b.id ? "..." : "✕ Cancel Request"}
+                    <button style={S.declineBtn} disabled={updating === b.id} onClick={() => handleStatus(b.id, "cancelled")}>
+                      {updating === b.id ? "..." : "Cancel Request"}
                     </button>
                   )}
                 </div>
@@ -158,12 +143,12 @@ export default function MyBookings() {
   );
 }
 
-const styles = {
-  page: { maxWidth: 740, margin: "32px auto", padding: "0 20px", fontFamily: "sans-serif" },
+const S = {
+  page: { maxWidth: 740, margin: "32px auto", padding: "0 20px", fontFamily: "system-ui, sans-serif" },
   topBar: { display: "flex", alignItems: "center", gap: 12, marginBottom: 24 },
   backBtn: { background: "none", border: "none", color: "#4f46e5", cursor: "pointer", fontSize: 14, fontWeight: 600, padding: 0 },
   title: { fontSize: 22, fontWeight: 700, margin: 0, color: "#111", flex: 1 },
-  count: { fontSize: 13, color: "#6b7280" },
+  countText: { fontSize: 13, color: "#6b7280" },
   filterRow: { display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" },
   filterBtn: { padding: "6px 14px", borderRadius: 20, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 500, display: "flex", alignItems: "center", gap: 6 },
   countBadge: { padding: "1px 6px", borderRadius: 10, fontSize: 11, fontWeight: 700 },

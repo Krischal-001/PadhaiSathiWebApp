@@ -25,88 +25,84 @@ export default function Dashboard() {
   const confirmedCount = bookings.filter((b) => b.status === "confirmed").length;
 
   return (
-    <div style={styles.page}>
-      <div style={styles.header}>
-        <span style={styles.logo}>📚 PadhaiSathi</span>
-        <div style={styles.headerRight}>
-          <span style={styles.headerEmail}>{user?.email}</span>
-          <button onClick={handleLogout} style={styles.logoutBtn}>Logout</button>
+    <div style={S.page}>
+      <div style={S.header}>
+        <span style={S.logo}>PadhaiSathi</span>
+        <div style={S.headerRight}>
+          <span style={S.headerEmail}>{user?.email}</span>
+          <button onClick={handleLogout} style={S.logoutBtn}>Logout</button>
         </div>
       </div>
 
-      <div style={styles.main}>
-        <div style={styles.welcomeCard}>
-          <div style={styles.avatar}>{user?.username?.[0]?.toUpperCase()}</div>
+      <div style={S.main}>
+        <div style={S.welcomeCard}>
+          <div style={S.avatar}>{user?.username?.[0]?.toUpperCase()}</div>
           <div>
-            <h2 style={styles.welcomeText}>Welcome back, {user?.username}!</h2>
-            <span style={styles.roleBadge}>{user?.role || "student"}</span>
+            <h2 style={S.welcomeText}>Welcome back, {user?.username}!</h2>
+            <span style={S.roleBadge}>{user?.role || "student"}</span>
           </div>
         </div>
 
         {bookings.length > 0 && (
           <>
-            <div style={styles.sectionTitle}>Booking summary</div>
-            <div style={styles.statsRow}>
-              <div style={styles.statCard}>
-                <span style={styles.statNum}>{bookings.length}</span>
-                <span style={styles.statLabel}>Total</span>
+            <div style={S.sectionTitle}>Booking Summary</div>
+            <div style={S.statsRow}>
+              <div style={S.statCard}>
+                <span style={S.statNum}>{bookings.length}</span>
+                <span style={S.statLabel}>Total</span>
               </div>
-              <div style={{ ...styles.statCard, background: "#fef3c7" }}>
-                <span style={styles.statNum}>{pendingCount}</span>
-                <span style={styles.statLabel}>Pending</span>
+              <div style={{ ...S.statCard, background: "#fef3c7" }}>
+                <span style={S.statNum}>{pendingCount}</span>
+                <span style={S.statLabel}>Pending</span>
               </div>
-              <div style={{ ...styles.statCard, background: "#d1fae5" }}>
-                <span style={styles.statNum}>{confirmedCount}</span>
-                <span style={styles.statLabel}>Confirmed</span>
+              <div style={{ ...S.statCard, background: "#d1fae5" }}>
+                <span style={S.statNum}>{confirmedCount}</span>
+                <span style={S.statLabel}>Confirmed</span>
               </div>
             </div>
           </>
         )}
 
-        <div style={styles.sectionTitle}>Tutor profile</div>
+        <div style={S.sectionTitle}>Tutor Profile</div>
         {loading ? (
-          <div style={styles.card}><p style={styles.muted}>Loading...</p></div>
+          <div style={S.card}><p style={S.muted}>Loading...</p></div>
         ) : profile ? (
-          <div style={styles.card}>
-            <div style={styles.profileTop}>
+          <div style={S.card}>
+            <div style={S.profileTop}>
               <div>
-                <p style={styles.profileCity}>📍 {profile.city}</p>
-                <p style={styles.profileBio}>{profile.bio}</p>
+                <p style={S.profileCity}>{profile.city}</p>
+                <p style={S.profileBio}>{profile.bio}</p>
               </div>
-              <div style={styles.rateBox}>
-                <span style={styles.rate}>NPR {profile.hourly_rate}</span>
-                <span style={styles.rateLabel}>/hr</span>
+              <div style={S.rateBox}>
+                <span style={S.rate}>NPR {profile.hourly_rate}</span>
+                <span style={S.rateLabel}>/hr</span>
               </div>
             </div>
-            <div style={styles.tagRow}>
-              {profile.subjects?.map((s) => (
-                <span key={s.id} style={styles.subjectTag}>{s.name}</span>
-              ))}
+            <div style={S.tagRow}>
+              {profile.subjects?.map((s) => <span key={s.id} style={S.subjectTag}>{s.name}</span>)}
             </div>
-            <div style={styles.cardActions}>
-              <button style={styles.primaryBtn} onClick={() => navigate("/profile/me")}>View Profile</button>
-              <button style={styles.secondaryBtn} onClick={() => navigate("/profile/edit")}>Edit Profile</button>
-              <button style={styles.secondaryBtn} onClick={() => navigate(`/book/${profile.user_id}`)}>Book Me</button>
+            <div style={S.cardActions}>
+              <button style={S.primaryBtn} onClick={() => navigate("/profile/me")}>View Profile</button>
+              <button style={S.secondaryBtn} onClick={() => navigate("/profile/edit")}>Edit Profile</button>
             </div>
           </div>
         ) : (
-          <div style={styles.card}>
-            <p style={styles.muted}>You haven't created a tutor profile yet.</p>
-            <button style={styles.primaryBtn} onClick={() => navigate("/profile/create")}>+ Create Profile</button>
+          <div style={S.card}>
+            <p style={S.muted}>No tutor profile yet.</p>
+            <button style={S.primaryBtn} onClick={() => navigate("/profile/create")}>Create Profile</button>
           </div>
         )}
 
-        <div style={styles.sectionTitle}>Quick actions</div>
-        <div style={styles.quickGrid}>
+        <div style={S.sectionTitle}>Quick Actions</div>
+        <div style={S.quickGrid}>
           {[
-            { icon: "👤", label: "My Profile", path: "/profile/me" },
-            { icon: "✏️", label: "Edit Profile", path: "/profile/edit" },
-            { icon: "📅", label: "My Bookings", path: "/bookings" },
-            { icon: "➕", label: "Create Profile", path: "/profile/create" },
+            { label: "My Profile", path: "/profile/me" },
+            { label: "Edit Profile", path: "/profile/edit" },
+            { label: "My Bookings", path: "/bookings" },
+            { label: "Create Profile", path: "/profile/create" },
           ].map((q) => (
-            <div key={q.label} style={styles.quickCard} onClick={() => navigate(q.path)}>
-              <span style={styles.quickIcon}>{q.icon}</span>
-              <span style={styles.quickLabel}>{q.label}</span>
+            <div key={q.label} style={S.quickCard} onClick={() => navigate(q.path)}>
+              <span style={S.quickLabel}>{q.label}</span>
             </div>
           ))}
         </div>
@@ -115,10 +111,10 @@ export default function Dashboard() {
   );
 }
 
-const styles = {
-  page: { minHeight: "100vh", background: "#f9fafb", fontFamily: "sans-serif" },
+const S = {
+  page: { minHeight: "100vh", background: "#f9fafb", fontFamily: "system-ui, sans-serif" },
   header: { background: "#fff", borderBottom: "1px solid #e5e7eb", padding: "0 32px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" },
-  logo: { fontWeight: 700, fontSize: 20, color: "#4f46e5" },
+  logo: { fontWeight: 800, fontSize: 20, color: "#4f46e5", letterSpacing: "-0.5px" },
   headerRight: { display: "flex", alignItems: "center", gap: 16 },
   headerEmail: { fontSize: 13, color: "#6b7280" },
   logoutBtn: { padding: "6px 16px", background: "#fee2e2", color: "#991b1b", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 600, fontSize: 13 },
@@ -129,7 +125,7 @@ const styles = {
   roleBadge: { marginTop: 6, display: "inline-block", padding: "2px 10px", background: "#ede9fe", color: "#4f46e5", borderRadius: 20, fontSize: 12, fontWeight: 600, textTransform: "capitalize" },
   sectionTitle: { fontSize: 13, fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 },
   statsRow: { display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, marginBottom: 28 },
-  statCard: { background: "#f3f4f6", borderRadius: 10, padding: "16px", textAlign: "center" },
+  statCard: { background: "#f3f4f6", borderRadius: 10, padding: 16, textAlign: "center" },
   statNum: { display: "block", fontSize: 28, fontWeight: 700, color: "#111" },
   statLabel: { fontSize: 12, color: "#6b7280", fontWeight: 500 },
   card: { background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "20px 24px", marginBottom: 28 },
@@ -141,12 +137,11 @@ const styles = {
   rateLabel: { fontSize: 13, color: "#6b7280" },
   tagRow: { display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 },
   subjectTag: { padding: "3px 10px", background: "#ede9fe", color: "#4f46e5", borderRadius: 20, fontSize: 12, fontWeight: 500 },
-  cardActions: { display: "flex", gap: 10, flexWrap: "wrap" },
+  cardActions: { display: "flex", gap: 10 },
   primaryBtn: { padding: "8px 20px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 600, fontSize: 14 },
   secondaryBtn: { padding: "8px 20px", background: "#f3f4f6", color: "#111", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 600, fontSize: 14 },
   muted: { color: "#6b7280", fontSize: 14, marginBottom: 16 },
   quickGrid: { display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 28 },
-  quickCard: { background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "18px 12px", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, cursor: "pointer" },
-  quickIcon: { fontSize: 24 },
-  quickLabel: { fontSize: 12, fontWeight: 600, color: "#374151", textAlign: "center" },
+  quickCard: { background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "20px 12px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" },
+  quickLabel: { fontSize: 13, fontWeight: 600, color: "#374151", textAlign: "center" },
 };
