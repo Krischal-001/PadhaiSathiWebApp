@@ -3,13 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getMyBookings, updateBookingStatus } from "../api/bookings";
 
-const STATUS_STYLE = {
-  pending:   { bg: "#fef3c7", color: "#92400e" },
-  confirmed: { bg: "#d1fae5", color: "#065f46" },
-  cancelled: { bg: "#fee2e2", color: "#991b1b" },
-  completed: { bg: "#e0e7ff", color: "#3730a3" },
-};
-
 export default function MyBookings() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -18,125 +11,142 @@ export default function MyBookings() {
   const [filter, setFilter] = useState("all");
   const [updating, setUpdating] = useState(null);
 
-  const fetchBookings = async () => {
-    const data = await getMyBookings();
-    setBookings(Array.isArray(data) ? data : []);
+  const load = async () => {
+    try {
+      const data = await getMyBookings();
+      setBookings(Array.isArray(data) ? data : []);
+    } catch (e) {
+      setBookings([]);
+    }
     setLoading(false);
   };
 
-  useEffect(() => { fetchBookings(); }, []);
+  useEffect(() => { load(); }, []);
 
-  const handleStatus = async (id, status) => {
+  const changeStatus = async (id, status) => {
     setUpdating(id);
     await updateBookingStatus(id, status);
-    await fetchBookings();
+    await load();
     setUpdating(null);
   };
 
-  const filters = ["all", "pending", "confirmed", "completed", "cancelled"];
-  const filtered = filter === "all" ? bookings : bookings.filter((b) => b.status === filter);
-  const counts = filters.reduce((acc, f) => {
-    acc[f] = f === "all" ? bookings.length : bookings.filter((b) => b.status === f).length;
-    return acc;
-  }, {});
+  const statusColor = {
+    pending:   { bg: "#fef3c7", color: "#92400e" },
+    confirmed: { bg: "#d1fae5", color: "#065f46" },
+    cancelled: { bg: "#fee2e2", color: "#991b1b" },
+    completed: { bg: "#e0e7ff", color: "#3730a3" },
+  };
+
+  const tabs = ["all", "pending", "confirmed", "completed", "cancelled"];
+  const shown = filter === "all" ? bookings : bookings.filter((b) => b.status === filter);
+
+  if (loading) return (
+    <div style={{ padding: 40, textAlign: "center", color: "#6b7280", fontFamily: "system-ui" }}>
+      Loading bookings...
+    </div>
+  );
 
   return (
-    <div style={S.page}>
-      <div style={S.topBar}>
-        <button style={S.backBtn} onClick={() => navigate("/dashboard")}>Back to Dashboard</button>
-        <h2 style={S.title}>My Bookings</h2>
-        <span style={S.countText}>{bookings.length} total</span>
+    <div style={{ maxWidth: 740, margin: "32px auto", padding: "0 20px", fontFamily: "system-ui, sans-serif" }}>
+
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
+        <button onClick={() => navigate("/dashboard")}
+          style={{ background: "none", border: "none", color: "#4f46e5", cursor: "pointer", fontSize: 14, fontWeight: 600, padding: 0 }}>
+          Back to Dashboard
+        </button>
+        <h2 style={{ fontSize: 22, fontWeight: 700, margin: 0, color: "#111", flex: 1 }}>My Bookings</h2>
+        <span style={{ fontSize: 13, color: "#6b7280" }}>{bookings.length} total</span>
       </div>
 
-      <div style={S.filterRow}>
-        {filters.map((f) => (
-          <button
-            key={f}
-            style={{
-              ...S.filterBtn,
-              background: filter === f ? "#4f46e5" : "#f3f4f6",
-              color: filter === f ? "#fff" : "#374151",
-            }}
-            onClick={() => setFilter(f)}
-          >
-            {f.charAt(0).toUpperCase() + f.slice(1)}
-            {counts[f] > 0 && (
-              <span style={{ ...S.countBadge, background: filter === f ? "rgba(255,255,255,0.25)" : "#e5e7eb" }}>
-                {counts[f]}
-              </span>
-            )}
-          </button>
-        ))}
+      <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
+        {tabs.map((t) => {
+          const cnt = t === "all" ? bookings.length : bookings.filter((b) => b.status === t).length;
+          return (
+            <button key={t} onClick={() => setFilter(t)} style={{
+              padding: "6px 14px", borderRadius: 20, border: "none", cursor: "pointer",
+              fontSize: 13, fontWeight: 500, display: "flex", alignItems: "center", gap: 6,
+              background: filter === t ? "#4f46e5" : "#f3f4f6",
+              color: filter === t ? "#fff" : "#374151",
+            }}>
+              {t.charAt(0).toUpperCase() + t.slice(1)}
+              {cnt > 0 && <span style={{ padding: "1px 6px", borderRadius: 10, fontSize: 11, fontWeight: 700, background: filter === t ? "rgba(255,255,255,0.25)" : "#e5e7eb" }}>{cnt}</span>}
+            </button>
+          );
+        })}
       </div>
 
-      {loading ? (
-        <div style={S.emptyBox}><p style={S.muted}>Loading bookings...</p></div>
-      ) : filtered.length === 0 ? (
-        <div style={S.emptyBox}>
-          <p style={S.muted}>No {filter === "all" ? "" : filter} bookings found.</p>
-        </div>
+      {shown.length === 0 ? (
+        <p style={{ color: "#6b7280", textAlign: "center", padding: 40 }}>No bookings found.</p>
       ) : (
-        <div style={S.list}>
-          {filtered.map((b) => {
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {shown.map((b) => {
             const isTutor = b.tutor_id === user?.id;
-            const otherName = isTutor ? b.student_name : b.tutor_name;
-            const otherEmail = isTutor ? b.student_email : b.tutor_email;
-            const sc = STATUS_STYLE[b.status] || STATUS_STYLE.pending;
-            const date = new Date(b.booking_date).toLocaleDateString("en-US", {
+            const name = isTutor ? b.student_name : b.tutor_name;
+            const email = isTutor ? b.student_email : b.tutor_email;
+            const sc = statusColor[b.status] || statusColor.pending;
+            const dateStr = new Date(b.booking_date).toLocaleDateString("en-US", {
               weekday: "short", year: "numeric", month: "short", day: "numeric",
             });
 
             return (
-              <div key={b.id} style={S.card}>
-                <div style={S.cardHeader}>
-                  <div style={S.cardLeft}>
-                    <div style={S.roleTag}>{isTutor ? "Student" : "Tutor"}</div>
+              <div key={b.id} style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden" }}>
+
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderBottom: "1px solid #f3f4f6" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: "#4f46e5", background: "#ede9fe", padding: "2px 8px", borderRadius: 10, textTransform: "uppercase" }}>
+                      {isTutor ? "Student" : "Tutor"}
+                    </span>
                     <div>
-                      <p style={S.personName}>{otherName}</p>
-                      <p style={S.personEmail}>{otherEmail}</p>
+                      <p style={{ fontSize: 15, fontWeight: 600, color: "#111", margin: 0 }}>{name}</p>
+                      <p style={{ fontSize: 12, color: "#6b7280", margin: 0 }}>{email}</p>
                     </div>
                   </div>
-                  <span style={{ ...S.statusBadge, background: sc.bg, color: sc.color }}>
+                  <span style={{ padding: "4px 12px", borderRadius: 20, fontSize: 12, fontWeight: 600, textTransform: "capitalize", background: sc.bg, color: sc.color }}>
                     {b.status}
                   </span>
                 </div>
 
-                <div style={S.cardBody}>
-                  <div style={S.metaGrid}>
-                    <div style={S.metaItem}><span>Date:</span><span>{date}</span></div>
-                    <div style={S.metaItem}><span>Time:</span><span>{b.start_time} - {b.end_time}</span></div>
-                    {b.subject_name && <div style={S.metaItem}><span>Subject:</span><span>{b.subject_name}</span></div>}
-                    {b.hourly_rate && <div style={S.metaItem}><span>Rate:</span><span>NPR {b.hourly_rate}/hr</span></div>}
+                <div style={{ padding: "14px 20px" }}>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 24px", marginBottom: 8 }}>
+                    <span style={{ fontSize: 13, color: "#374151" }}>Date: {dateStr}</span>
+                    <span style={{ fontSize: 13, color: "#374151" }}>Time: {b.start_time} - {b.end_time}</span>
+                    {b.subject_name && <span style={{ fontSize: 13, color: "#374151" }}>Subject: {b.subject_name}</span>}
+                    {b.hourly_rate && <span style={{ fontSize: 13, color: "#374151" }}>Rate: NPR {b.hourly_rate}/hr</span>}
                   </div>
                   {b.message && (
-                    <div style={S.messageBox}>
-                      <p style={S.messageText}>"{b.message}"</p>
+                    <div style={{ background: "#f9fafb", borderRadius: 8, padding: "8px 12px", marginTop: 4 }}>
+                      <p style={{ fontSize: 13, color: "#374151", fontStyle: "italic", margin: 0 }}>"{b.message}"</p>
                     </div>
                   )}
                 </div>
 
-                <div style={S.cardActions}>
+                <div style={{ padding: "12px 20px", borderTop: "1px solid #f3f4f6", display: "flex", gap: 8 }}>
                   {isTutor && b.status === "pending" && (
                     <>
-                      <button style={S.confirmBtn} disabled={updating === b.id} onClick={() => handleStatus(b.id, "confirmed")}>
+                      <button disabled={updating === b.id} onClick={() => changeStatus(b.id, "confirmed")}
+                        style={{ padding: "7px 18px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 13, fontWeight: 600 }}>
                         {updating === b.id ? "..." : "Confirm"}
                       </button>
-                      <button style={S.declineBtn} disabled={updating === b.id} onClick={() => handleStatus(b.id, "cancelled")}>
+                      <button disabled={updating === b.id} onClick={() => changeStatus(b.id, "cancelled")}
+                        style={{ padding: "7px 18px", background: "#fee2e2", color: "#991b1b", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 13, fontWeight: 600 }}>
                         Decline
                       </button>
                     </>
                   )}
                   {isTutor && b.status === "confirmed" && (
-                    <button style={S.completeBtn} disabled={updating === b.id} onClick={() => handleStatus(b.id, "completed")}>
+                    <button disabled={updating === b.id} onClick={() => changeStatus(b.id, "completed")}
+                      style={{ padding: "7px 18px", background: "#059669", color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 13, fontWeight: 600 }}>
                       {updating === b.id ? "..." : "Mark Complete"}
                     </button>
                   )}
                   {!isTutor && b.status === "pending" && (
-                    <button style={S.declineBtn} disabled={updating === b.id} onClick={() => handleStatus(b.id, "cancelled")}>
+                    <button disabled={updating === b.id} onClick={() => changeStatus(b.id, "cancelled")}
+                      style={{ padding: "7px 18px", background: "#fee2e2", color: "#991b1b", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 13, fontWeight: 600 }}>
                       {updating === b.id ? "..." : "Cancel Request"}
                     </button>
                   )}
                 </div>
+
               </div>
             );
           })}
@@ -145,33 +155,3 @@ export default function MyBookings() {
     </div>
   );
 }
-
-const S = {
-  page: { maxWidth: 740, margin: "32px auto", padding: "0 20px", fontFamily: "system-ui, sans-serif" },
-  topBar: { display: "flex", alignItems: "center", gap: 12, marginBottom: 24 },
-  backBtn: { background: "none", border: "none", color: "#4f46e5", cursor: "pointer", fontSize: 14, fontWeight: 600, padding: 0 },
-  title: { fontSize: 22, fontWeight: 700, margin: 0, color: "#111", flex: 1 },
-  countText: { fontSize: 13, color: "#6b7280" },
-  filterRow: { display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" },
-  filterBtn: { padding: "6px 14px", borderRadius: 20, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 500, display: "flex", alignItems: "center", gap: 6 },
-  countBadge: { padding: "1px 6px", borderRadius: 10, fontSize: 11, fontWeight: 700 },
-  list: { display: "flex", flexDirection: "column", gap: 14 },
-  card: { background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden" },
-  cardHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderBottom: "1px solid #f3f4f6" },
-  cardLeft: { display: "flex", alignItems: "center", gap: 12 },
-  roleTag: { fontSize: 11, fontWeight: 600, color: "#4f46e5", background: "#ede9fe", padding: "2px 8px", borderRadius: 10, textTransform: "uppercase" },
-  personName: { fontSize: 15, fontWeight: 600, color: "#111", margin: 0 },
-  personEmail: { fontSize: 12, color: "#6b7280", margin: 0 },
-  statusBadge: { padding: "4px 12px", borderRadius: 20, fontSize: 12, fontWeight: 600, textTransform: "capitalize" },
-  cardBody: { padding: "14px 20px" },
-  metaGrid: { display: "flex", flexWrap: "wrap", gap: "8px 24px", marginBottom: 10 },
-  metaItem: { display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#374151" },
-  messageBox: { background: "#f9fafb", borderRadius: 8, padding: "8px 12px", marginTop: 8 },
-  messageText: { fontSize: 13, color: "#374151", fontStyle: "italic", margin: 0 },
-  cardActions: { padding: "12px 20px", borderTop: "1px solid #f3f4f6", display: "flex", gap: 8 },
-  confirmBtn: { padding: "7px 18px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 13, fontWeight: 600 },
-  completeBtn: { padding: "7px 18px", background: "#059669", color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 13, fontWeight: 600 },
-  declineBtn: { padding: "7px 18px", background: "#fee2e2", color: "#991b1b", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 13, fontWeight: 600 },
-  emptyBox: { textAlign: "center", padding: "60px 20px" },
-  muted: { color: "#6b7280", fontSize: 14 },
-};
