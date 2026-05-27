@@ -52,7 +52,11 @@ export default function MyBookings() {
         {filters.map((f) => (
           <button
             key={f}
-            style={{ ...S.filterBtn, background: filter === f ? "#4f46e5" : "#f3f4f6", color: filter === f ? "#fff" : "#374151" }}
+            style={{
+              ...S.filterBtn,
+              background: filter === f ? "#4f46e5" : "#f3f4f6",
+              color: filter === f ? "#fff" : "#374151",
+            }}
             onClick={() => setFilter(f)}
           >
             {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -69,7 +73,6 @@ export default function MyBookings() {
         <div style={S.emptyBox}><p style={S.muted}>Loading bookings...</p></div>
       ) : filtered.length === 0 ? (
         <div style={S.emptyBox}>
-          <div style={{ fontSize: 40, marginBottom: 12 }}>&#128197;</div>
           <p style={S.muted}>No {filter === "all" ? "" : filter} bookings found.</p>
         </div>
       ) : (
@@ -100,10 +103,10 @@ export default function MyBookings() {
 
                 <div style={S.cardBody}>
                   <div style={S.metaGrid}>
-                    <div style={S.metaItem}><span style={S.metaIcon}>&#128197;</span><span>{date}</span></div>
-                    <div style={S.metaItem}><span style={S.metaIcon}>&#128336;</span><span>{b.start_time} - {b.end_time}</span></div>
-                    {b.subject_name && <div style={S.metaItem}><span style={S.metaIcon}>&#128218;</span><span>{b.subject_name}</span></div>}
-                    {b.hourly_rate && <div style={S.metaItem}><span style={S.metaIcon}>&#128176;</span><span>NPR {b.hourly_rate}/hr</span></div>}
+                    <div style={S.metaItem}><span>Date:</span><span>{date}</span></div>
+                    <div style={S.metaItem}><span>Time:</span><span>{b.start_time} - {b.end_time}</span></div>
+                    {b.subject_name && <div style={S.metaItem}><span>Subject:</span><span>{b.subject_name}</span></div>}
+                    {b.hourly_rate && <div style={S.metaItem}><span>Rate:</span><span>NPR {b.hourly_rate}/hr</span></div>}
                   </div>
                   {b.message && (
                     <div style={S.messageBox}>
@@ -163,7 +166,6 @@ const S = {
   cardBody: { padding: "14px 20px" },
   metaGrid: { display: "flex", flexWrap: "wrap", gap: "8px 24px", marginBottom: 10 },
   metaItem: { display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#374151" },
-  metaIcon: { fontSize: 14 },
   messageBox: { background: "#f9fafb", borderRadius: 8, padding: "8px 12px", marginTop: 8 },
   messageText: { fontSize: 13, color: "#374151", fontStyle: "italic", margin: 0 },
   cardActions: { padding: "12px 20px", borderTop: "1px solid #f3f4f6", display: "flex", gap: 8 },
