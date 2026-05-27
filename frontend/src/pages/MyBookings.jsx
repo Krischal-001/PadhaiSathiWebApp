@@ -11,18 +11,17 @@ export default function MyBookings() {
   const [filter, setFilter] = useState("all");
   const [updating, setUpdating] = useState(null);
 
-  const load = async () => {
+const load = async () => {
     try {
       const data = await getMyBookings();
       setBookings(Array.isArray(data) ? data : []);
-    } catch (e) {
+    } catch {
       setBookings([]);
     }
     setLoading(false);
   };
 
-  useEffect(() => { load(); }, []);
-
+useEffect(() => { load(); }, []); // eslint-disable-line
   const changeStatus = async (id, status) => {
     setUpdating(id);
     await updateBookingStatus(id, status);
