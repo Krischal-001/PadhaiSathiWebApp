@@ -8,13 +8,13 @@ export default function ViewProfile() {
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetch = id ? getProfileById(id) : getMyProfile();
-    fetch.then((data) => {
-      if (data.message) setError(data.message);
-      else setProfile(data);
-    });
-  }, [id]);
+ useEffect(() => {
+  const fetchData = id ? getProfileById(id) : getMyProfile();
+  fetchData.then((data) => {
+    if (data.message) setError(data.message);
+    else setProfile(data);
+  }).catch(() => setError("Failed to load profile"));
+}, [id]);
 
   if (error) return (
     <div style={styles.container}>
@@ -62,9 +62,14 @@ export default function ViewProfile() {
         )}
 
         {!id && (
-          <button style={styles.editBtn} onClick={() => navigate("/profile/edit")}>
-            Edit Profile
-          </button>
+         <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
+  <button style={styles.editBtn} onClick={() => navigate("/profile/edit")}>
+    Edit Profile
+  </button>
+  <button style={{ ...styles.editBtn, background: '#f3f4f6', color: '#111' }} onClick={() => navigate("/dashboard")}>
+    Dashboard
+  </button>
+</div>
         )}
       </div>
     </div>

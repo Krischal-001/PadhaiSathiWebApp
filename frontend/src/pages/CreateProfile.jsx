@@ -16,7 +16,11 @@ export default function CreateProfile() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getSubjects().then(setSubjects);
+    getSubjects()
+      .then((data) => {
+        if (Array.isArray(data)) setSubjects(data);
+      })
+      .catch(() => setError("Failed to load subjects"));
   }, []);
 
   const toggleSubject = (id) => {
@@ -32,21 +36,31 @@ export default function CreateProfile() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const res = await createProfile({
-      ...form,
-      hourly_rate: Number(form.hourly_rate),
-      experience_years: Number(form.experience_years),
-    });
-    setLoading(false);
-    if (res.profile) {
-      navigate("/profile/me");
-    } else {
-      setError(res.message || "Something went wrong");
+    try {
+      const res = await createProfile({
+        ...form,
+        hourly_rate: Number(form.hourly_rate),
+        experience_years: Number(form.experience_years),
+      });
+      if (res.profile) {
+        navigate("/profile/me");
+      } else {
+        setError(res.message || "Something went wrong");
+      }
+    } catch {
+      setError("Failed to create profile");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div style={styles.container}>
+      <div style={styles.topBar}>
+        <button style={styles.backBtn} onClick={() => navigate("/dashboard")}>
+          ← Dashboard
+        </button>
+      </div>
       <h2 style={styles.heading}>Create Your Tutor Profile</h2>
       {error && <p style={styles.error}>{error}</p>}
       <form onSubmit={handleSubmit} style={styles.form}>
@@ -59,7 +73,6 @@ export default function CreateProfile() {
           placeholder="Tell students about yourself..."
           required
         />
-
         <label style={styles.label}>Hourly Rate (NPR)</label>
         <input
           style={styles.input}
@@ -69,7 +82,6 @@ export default function CreateProfile() {
           placeholder="e.g. 500"
           required
         />
-
         <label style={styles.label}>City</label>
         <input
           style={styles.input}
@@ -79,7 +91,6 @@ export default function CreateProfile() {
           placeholder="e.g. Kathmandu"
           required
         />
-
         <label style={styles.label}>Years of Experience</label>
         <input
           style={styles.input}
@@ -89,7 +100,6 @@ export default function CreateProfile() {
           placeholder="e.g. 3"
           required
         />
-
         <label style={styles.label}>Subjects You Teach</label>
         <div style={styles.subjectGrid}>
           {subjects.map((s) => (
@@ -107,7 +117,6 @@ export default function CreateProfile() {
             </button>
           ))}
         </div>
-
         <button type="submit" style={styles.submitBtn} disabled={loading}>
           {loading ? "Creating..." : "Create Profile"}
         </button>
@@ -118,6 +127,8 @@ export default function CreateProfile() {
 
 const styles = {
   container: { maxWidth: 600, margin: "40px auto", padding: "0 20px" },
+  topBar: { marginBottom: 16 },
+  backBtn: { background: "none", border: "none", color: "#4f46e5", cursor: "pointer", fontSize: 14, fontWeight: 600, padding: 0 },
   heading: { fontSize: 24, fontWeight: 600, marginBottom: 24, color: "#111" },
   form: { display: "flex", flexDirection: "column", gap: 16 },
   label: { fontWeight: 500, fontSize: 14, color: "#374151" },
