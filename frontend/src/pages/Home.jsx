@@ -16,15 +16,26 @@ const FEATURES = [
   { title: "Parent Dashboard", desc: "Parents can monitor their children's sessions and progress." },
 ];
 
+const QUICK_SUBJECTS = ["Mathematics", "Physics", "English", "Computer Science", "Chemistry"];
+
 export default function Home() {
   const navigate = useNavigate();
+
+  const handleSearch = () => {
+    const val = document.getElementById("hero-search").value;
+    navigate(`/tutors${val ? `?search=${encodeURIComponent(val)}` : ""}`);
+  };
+
+  const handleKey = (e) => {
+    if (e.key === "Enter") handleSearch();
+  };
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", background: "#fafafa", minHeight: "100vh" }}>
 
       {/* Hero */}
-      <div style={{ background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)", padding: "80px 24px", textAlign: "center", color: "#fff" }}>
-        <div style={{ maxWidth: 700, margin: "0 auto" }}>
+      <div style={{ background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)", padding: "80px 24px 64px", textAlign: "center", color: "#fff" }}>
+        <div style={{ maxWidth: 720, margin: "0 auto" }}>
           <div style={{ display: "inline-block", background: "rgba(255,255,255,0.15)", padding: "6px 16px", borderRadius: 20, fontSize: 13, fontWeight: 600, marginBottom: 24 }}>
             Nepal's #1 Tutor Platform
           </div>
@@ -32,17 +43,31 @@ export default function Home() {
             Learn Smarter.<br />Teach Better.
           </h1>
           <p style={{ fontSize: 18, opacity: 0.85, margin: "0 0 40px", lineHeight: 1.6 }}>
-            PadhaiSathi connects students with the best tutors in Nepal. Book sessions, track progress, and achieve your goals.
+            PadhaiSathi connects students with the best tutors in Nepal.
           </p>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <button onClick={() => navigate("/register")}
-              style={{ padding: "14px 32px", background: "#fff", color: "#4f46e5", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer" }}>
-              Get Started Free
+
+          {/* Hero Search */}
+          <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 14, padding: 8, display: "flex", gap: 8, maxWidth: 580, margin: "0 auto 20px" }}>
+            <input
+              id="hero-search"
+              onKeyDown={handleKey}
+              placeholder="Search by subject, tutor name..."
+              style={{ flex: 1, padding: "13px 18px", borderRadius: 9, border: "none", fontSize: 15, outline: "none", background: "#fff", color: "#111" }}
+            />
+            <button onClick={handleSearch}
+              style={{ padding: "13px 28px", background: "#fff", color: "#4f46e5", border: "none", borderRadius: 9, fontSize: 15, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>
+              Search
             </button>
-            <button onClick={() => navigate("/login")}
-              style={{ padding: "14px 32px", background: "rgba(255,255,255,0.15)", color: "#fff", border: "2px solid rgba(255,255,255,0.4)", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer" }}>
-              Login
-            </button>
+          </div>
+
+          {/* Quick subject tags */}
+          <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
+            {QUICK_SUBJECTS.map(s => (
+              <span key={s} onClick={() => navigate(`/tutors?subject=${encodeURIComponent(s)}`)}
+                style={{ padding: "5px 14px", background: "rgba(255,255,255,0.2)", color: "#fff", borderRadius: 20, fontSize: 13, fontWeight: 500, cursor: "pointer", border: "1px solid rgba(255,255,255,0.3)" }}>
+                {s}
+              </span>
+            ))}
           </div>
         </div>
       </div>
@@ -109,10 +134,16 @@ export default function Home() {
       <div style={{ background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)", padding: "64px 24px", textAlign: "center", color: "#fff" }}>
         <h2 style={{ fontSize: 36, fontWeight: 800, margin: "0 0 16px" }}>Ready to get started?</h2>
         <p style={{ fontSize: 16, opacity: 0.85, margin: "0 0 32px" }}>Join thousands of students and tutors on PadhaiSathi today.</p>
-        <button onClick={() => navigate("/register")}
-          style={{ padding: "14px 40px", background: "#fff", color: "#4f46e5", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer" }}>
-          Create Free Account
-        </button>
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <button onClick={() => navigate("/register")}
+            style={{ padding: "14px 40px", background: "#fff", color: "#4f46e5", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer" }}>
+            Create Free Account
+          </button>
+          <button onClick={() => navigate("/tutors")}
+            style={{ padding: "14px 40px", background: "rgba(255,255,255,0.15)", color: "#fff", border: "2px solid rgba(255,255,255,0.4)", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer" }}>
+            Browse Tutors
+          </button>
+        </div>
       </div>
 
       {/* Footer */}
@@ -128,7 +159,7 @@ export default function Home() {
             <span style={{ cursor: "pointer" }} onClick={() => navigate("/register?role=parent")}>For Parents</span>
             <span style={{ cursor: "pointer" }} onClick={() => navigate("/register?role=institute")}>For Institutes</span>
           </div>
-          <div style={{ fontSize: 12 }}>© 2026 PadhaiSathi. All rights reserved.</div>
+          <div style={{ fontSize: 12 }}>2026 PadhaiSathi. All rights reserved.</div>
         </div>
       </div>
 
