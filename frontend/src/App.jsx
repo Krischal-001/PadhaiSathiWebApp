@@ -12,7 +12,8 @@ import ViewProfile from "./pages/ViewProfile";
 import EditProfile from "./pages/EditProfile";
 import BookTutor from "./pages/BookTutor";
 import MyBookings from "./pages/MyBookings";
-
+import TutorSearch from "./pages/TutorSearch";
+import AdminDashboard from "./pages/AdminDashboard";
 function App() {
   return (
     <BrowserRouter>
@@ -30,6 +31,8 @@ function App() {
           <Route path="/book/:tutor_id" element={<ProtectedRoute><BookTutor /></ProtectedRoute>} />
           <Route path="/bookings" element={<ProtectedRoute><MyBookings /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/tutors" element={<ProtectedRoute><TutorSearch /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
