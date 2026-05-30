@@ -15,6 +15,7 @@ const Stars = ({ rating, interactive, onRate }) => (
           color: n <= rating ? "#f59e0b" : "#d1d5db",
           cursor: interactive ? "pointer" : "default",
           lineHeight: 1,
+          userSelect: "none",
         }}
       >
         &#9733;
@@ -44,8 +45,8 @@ export default function TutorPublicProfile() {
         ]);
         if (t && !t.message) setTutor(t);
         if (r && r.reviews) setReviewData(r);
-      } catch (err) {
-        console.error(err);
+      } catch {
+        // network error
       }
       setLoading(false);
     };
@@ -70,8 +71,8 @@ export default function TutorPublicProfile() {
       } else {
         setFormError(res.message || "Failed to submit review");
       }
-    } catch (err) {
-      setFormError("Something went wrong");
+    } catch {
+      setFormError("Something went wrong. Please try again.");
     }
     setSubmitting(false);
   };
@@ -87,9 +88,9 @@ export default function TutorPublicProfile() {
   if (!tutor) {
     return (
       <div style={{ padding: 60, textAlign: "center", fontFamily: "system-ui" }}>
-        <p style={{ color: "#6b7280" }}>Tutor not found.</p>
+        <p style={{ color: "#6b7280", marginBottom: 16 }}>Tutor not found.</p>
         <button onClick={() => navigate("/tutors")}
-          style={{ marginTop: 16, padding: "9px 20px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 600 }}>
+          style={{ padding: "9px 20px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 600 }}>
           Back to Search
         </button>
       </div>
@@ -128,7 +129,7 @@ export default function TutorPublicProfile() {
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 12, fontSize: 14, color: "#6b7280" }}>
                 {tutor.city && <span>{tutor.city}</span>}
                 {tutor.experience_years && <span>{tutor.experience_years} yrs experience</span>}
-                {reviewData.total > 0 && (
+                {Number(reviewData.total) > 0 && (
                   <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <Stars rating={Math.round(Number(reviewData.avg_rating))} />
                     <span style={{ fontWeight: 600, color: "#111" }}>{reviewData.avg_rating}</span>
@@ -155,7 +156,8 @@ export default function TutorPublicProfile() {
             <div style={{ textAlign: "center", background: "#f9fafb", borderRadius: 12, padding: "20px 28px", border: "1px solid #e5e7eb", flexShrink: 0 }}>
               <div style={{ fontSize: 32, fontWeight: 800, color: "#4f46e5" }}>NPR {tutor.hourly_rate}</div>
               <div style={{ fontSize: 13, color: "#6b7280", marginBottom: 16 }}>per hour</div>
-              <button onClick={() => navigate(`/book/${tutor.user_id}`)}
+              <button
+                onClick={() => navigate(`/book/${tutor.user_id}`)}
                 style={{ width: "100%", padding: "11px 24px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 10, fontWeight: 700, fontSize: 15, cursor: "pointer" }}>
                 Book Session
               </button>
@@ -169,7 +171,7 @@ export default function TutorPublicProfile() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
             <div>
               <h2 style={{ fontSize: 20, fontWeight: 700, color: "#111", margin: "0 0 6px" }}>Reviews</h2>
-              {reviewData.total > 0 && (
+              {Number(reviewData.total) > 0 && (
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <Stars rating={Math.round(Number(reviewData.avg_rating))} />
                   <span style={{ fontWeight: 700, color: "#111" }}>{reviewData.avg_rating}</span>
@@ -191,7 +193,9 @@ export default function TutorPublicProfile() {
             <form onSubmit={handleReview} style={{ background: "#f9fafb", borderRadius: 12, padding: 20, marginBottom: 24, border: "1px solid #e5e7eb" }}>
               <h3 style={{ fontSize: 15, fontWeight: 700, margin: "0 0 16px", color: "#111" }}>Write a Review</h3>
               {formError && (
-                <p style={{ color: "#dc2626", fontSize: 13, marginBottom: 12, background: "#fef2f2", padding: "8px 12px", borderRadius: 6 }}>{formError}</p>
+                <p style={{ color: "#dc2626", fontSize: 13, marginBottom: 12, background: "#fef2f2", padding: "8px 12px", borderRadius: 6 }}>
+                  {formError}
+                </p>
               )}
               <div style={{ marginBottom: 14 }}>
                 <label style={{ fontSize: 13, fontWeight: 600, color: "#374151", display: "block", marginBottom: 6 }}>
@@ -207,11 +211,19 @@ export default function TutorPublicProfile() {
                 />
               </div>
               <div style={{ marginBottom: 14 }}>
-                <label style={{ fontSize: 13, fontWeight: 600, color: "#374151", display: "block", marginBottom: 8 }}>Rating</label>
-                <Stars rating={form.rating} interactive onRate={n => setForm({ ...form, rating: n })} />
+                <label style={{ fontSize: 13, fontWeight: 600, color: "#374151", display: "block", marginBottom: 8 }}>
+                  Rating
+                </label>
+                <Stars
+                  rating={form.rating}
+                  interactive
+                  onRate={n => setForm({ ...form, rating: n })}
+                />
               </div>
               <div style={{ marginBottom: 16 }}>
-                <label style={{ fontSize: 13, fontWeight: 600, color: "#374151", display: "block", marginBottom: 6 }}>Comment</label>
+                <label style={{ fontSize: 13, fontWeight: 600, color: "#374151", display: "block", marginBottom: 6 }}>
+                  Comment
+                </label>
                 <textarea
                   value={form.comment}
                   onChange={e => setForm({ ...form, comment: e.target.value })}
@@ -223,7 +235,7 @@ export default function TutorPublicProfile() {
               <button
                 type="submit"
                 disabled={submitting}
-                style={{ padding: "10px 24px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 600, fontSize: 14 }}>
+                style={{ padding: "10px 24px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 600, fontSize: 14, opacity: submitting ? 0.7 : 1 }}>
                 {submitting ? "Submitting..." : "Submit Review"}
               </button>
             </form>
@@ -232,12 +244,15 @@ export default function TutorPublicProfile() {
           {/* Review List */}
           {reviewData.reviews.length === 0 ? (
             <div style={{ textAlign: "center", padding: "40px 0" }}>
-              <p style={{ color: "#6b7280", fontSize: 15 }}>No reviews yet. Be the first to review!</p>
+              <p style={{ color: "#6b7280", fontSize: 15, margin: 0 }}>No reviews yet. Be the first to review!</p>
             </div>
           ) : (
             <div style={{ display: "flex", flexDirection: "column" }}>
               {reviewData.reviews.map((r, idx) => (
-                <div key={r.id} style={{ padding: "18px 0", borderBottom: idx < reviewData.reviews.length - 1 ? "1px solid #f3f4f6" : "none" }}>
+                <div key={r.id} style={{
+                  padding: "18px 0",
+                  borderBottom: idx < reviewData.reviews.length - 1 ? "1px solid #f3f4f6" : "none",
+                }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
                     <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
                       <div style={{ width: 38, height: 38, borderRadius: "50%", background: "linear-gradient(135deg, #4f46e5, #7c3aed)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 14, flexShrink: 0 }}>
