@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getAdminStats, getAllUsers, getAllBookings, verifyUser, deleteUser } from "../api/admin";
 
 const TABS = ["Overview", "Users", "Bookings"];
-
 const ROLE_COLOR = {
   student: { bg: "#dbeafe", color: "#1d4ed8" },
   parent: { bg: "#fce7f3", color: "#9d174d" },
@@ -12,7 +11,6 @@ const ROLE_COLOR = {
   institute: { bg: "#fef3c7", color: "#92400e" },
   admin: { bg: "#fee2e2", color: "#991b1b" },
 };
-
 const STATUS_COLOR = {
   pending: { bg: "#fef3c7", color: "#92400e" },
   confirmed: { bg: "#d1fae5", color: "#065f46" },
@@ -32,30 +30,32 @@ export default function AdminDashboard() {
   const [roleFilter, setRoleFilter] = useState("all");
   const [bookingFilter, setBookingFilter] = useState("all");
 
-  useEffect(() => {
-    if (user && user.role !== "admin") {
-      navigate("/dashboard");
-      return;
-    }
-    loadAll();
-  }, [user]); // eslint-disable-line
-
-  const loadAll = async () => {
+  const loadAll = useCallback(async () => {
     setLoading(true);
     try {
-      const [s, u, b] = await Promise.all([
+      const [statsData, usersData, bookingsData] = await Promise.all([
         getAdminStats(),
         getAllUsers(),
         getAllBookings(),
       ]);
-      setStats(s);
-      setUsers(Array.isArray(u) ? u : []);
-      setBookings(Array.isArray(b) ? b : []);
-    } catch {
-      // ignore
+      setStats(statsData);
+      setUsers(usersData);
+      setBookings(bookingsData);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  };
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    if (user.role !== "admin") {
+      navigate("/dashboard");
+      return;
+    }
+    loadAll();
+  }, [user, navigate, loadAll]);
 
   const handleVerify = async (id) => {
     await verifyUser(id);
@@ -89,7 +89,6 @@ export default function AdminDashboard() {
   return (
     <div style={{ minHeight: "100vh", background: "#f9fafb", fontFamily: "system-ui, sans-serif" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 24px" }}>
-
         {/* Header */}
         <div style={{ marginBottom: 28, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <div>
@@ -129,7 +128,6 @@ export default function AdminDashboard() {
             {/* OVERVIEW TAB */}
             {tab === "Overview" && (
               <div>
-                {/* Stats Grid */}
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 28 }}>
                   {[
                     { label: "Total Users", value: stats?.total_users ?? 0, color: "#4f46e5", bg: "#ede9fe", icon: "U" },
@@ -149,7 +147,6 @@ export default function AdminDashboard() {
                   ))}
                 </div>
 
-                {/* Role Breakdown */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 28 }}>
                   <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "20px 24px" }}>
                     <h3 style={{ fontSize: 15, fontWeight: 700, margin: "0 0 16px", color: "#111" }}>Users by Role</h3>
@@ -169,7 +166,6 @@ export default function AdminDashboard() {
                       );
                     })}
                   </div>
-
                   <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "20px 24px" }}>
                     <h3 style={{ fontSize: 15, fontWeight: 700, margin: "0 0 16px", color: "#111" }}>Booking Status</h3>
                     {["pending", "confirmed", "completed", "cancelled"].map(status => {
@@ -191,7 +187,6 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                {/* Recent Activity */}
                 <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "20px 24px" }}>
                   <h3 style={{ fontSize: 15, fontWeight: 700, margin: "0 0 16px", color: "#111" }}>Recent Bookings</h3>
                   {bookings.slice(0, 8).map(b => {
@@ -242,7 +237,6 @@ export default function AdminDashboard() {
                     {filteredUsers.length} of {users.length} users
                   </span>
                 </div>
-
                 <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden" }}>
                   <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
                     <thead>
@@ -328,7 +322,6 @@ export default function AdminDashboard() {
                     );
                   })}
                 </div>
-
                 <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden" }}>
                   <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
                     <thead>

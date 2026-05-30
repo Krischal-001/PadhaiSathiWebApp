@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const ROLES = [
   { role: "student", label: "Student", desc: "Find expert tutors, book sessions, and track your learning progress.", color: "#dbeafe", accent: "#1d4ed8" },
@@ -20,6 +21,7 @@ const QUICK_SUBJECTS = ["Mathematics", "Physics", "English", "Computer Science",
 
 export default function Home() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleSearch = () => {
     const val = document.getElementById("hero-search").value;
@@ -32,7 +34,6 @@ export default function Home() {
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", background: "#fafafa", minHeight: "100vh" }}>
-
       {/* Hero */}
       <div style={{ background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)", padding: "80px 24px 64px", textAlign: "center", color: "#fff" }}>
         <div style={{ maxWidth: 720, margin: "0 auto" }}>
@@ -45,7 +46,6 @@ export default function Home() {
           <p style={{ fontSize: 18, opacity: 0.85, margin: "0 0 40px", lineHeight: 1.6 }}>
             PadhaiSathi connects students with the best tutors in Nepal.
           </p>
-
           {/* Hero Search */}
           <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 14, padding: 8, display: "flex", gap: 8, maxWidth: 580, margin: "0 auto 20px" }}>
             <input
@@ -59,7 +59,6 @@ export default function Home() {
               Search
             </button>
           </div>
-
           {/* Quick subject tags */}
           <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
             {QUICK_SUBJECTS.map(s => (
@@ -135,10 +134,17 @@ export default function Home() {
         <h2 style={{ fontSize: 36, fontWeight: 800, margin: "0 0 16px" }}>Ready to get started?</h2>
         <p style={{ fontSize: 16, opacity: 0.85, margin: "0 0 32px" }}>Join thousands of students and tutors on PadhaiSathi today.</p>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-          <button onClick={() => navigate("/register")}
-            style={{ padding: "14px 40px", background: "#fff", color: "#4f46e5", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer" }}>
-            Create Free Account
-          </button>
+          {user ? (
+            <button onClick={() => navigate("/dashboard")}
+              style={{ padding: "14px 40px", background: "#fff", color: "#4f46e5", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer" }}>
+              Go to Dashboard
+            </button>
+          ) : (
+            <button onClick={() => navigate("/register")}
+              style={{ padding: "14px 40px", background: "#fff", color: "#4f46e5", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer" }}>
+              Create Free Account
+            </button>
+          )}
           <button onClick={() => navigate("/tutors")}
             style={{ padding: "14px 40px", background: "rgba(255,255,255,0.15)", color: "#fff", border: "2px solid rgba(255,255,255,0.4)", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer" }}>
             Browse Tutors
@@ -159,10 +165,9 @@ export default function Home() {
             <span style={{ cursor: "pointer" }} onClick={() => navigate("/register?role=parent")}>For Parents</span>
             <span style={{ cursor: "pointer" }} onClick={() => navigate("/register?role=institute")}>For Institutes</span>
           </div>
-          <div style={{ fontSize: 12 }}>2026 PadhaiSathi. All rights reserved.</div>
+          <div style={{ fontSize: 12 }}>© 2026 PadhaiSathi. All rights reserved.</div>
         </div>
       </div>
-
     </div>
   );
 }

@@ -14,10 +14,8 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
   const handleLogout = () => { logout(); navigate("/"); };
-  const handleLogo = () => navigate(user ? "/dashboard" : "/");
-
+  const handleLogo = () => navigate("/");
   const rc = ROLE_COLORS[user?.role] || ROLE_COLORS.student;
 
   const navLinks = user ? [
@@ -31,7 +29,6 @@ export default function Navbar() {
   return (
     <nav style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", position: "sticky", top: 0, zIndex: 100 }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px", height: 64, display: "flex", alignItems: "center", gap: 24 }}>
-
         {/* Logo */}
         <div onClick={handleLogo} style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", flexShrink: 0 }}>
           <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg, #4f46e5, #7c3aed)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800 }}>
@@ -84,7 +81,6 @@ export default function Navbar() {
             </div>
           )}
         </div>
-
       </div>
     </nav>
   );
