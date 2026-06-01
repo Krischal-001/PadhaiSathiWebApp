@@ -15,6 +15,7 @@ import MyBookings from "./pages/MyBookings";
 import TutorSearch from "./pages/TutorSearch";
 import AdminDashboard from "./pages/AdminDashboard";
 import TutorPublicProfile from "./pages/TutorPublicProfile";
+import ManageAvailability from "./pages/ManageAvailability";
 
 const AppRoutes = () => (
   <>
@@ -34,6 +35,7 @@ const AppRoutes = () => (
       <Route path="/bookings" element={<ProtectedRoute><MyBookings /></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="/availability" element={<ProtectedRoute><ManageAvailability /></ProtectedRoute>} />
     </Routes>
   </>
 );
