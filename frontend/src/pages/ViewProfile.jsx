@@ -66,7 +66,7 @@ export default function ViewProfile() {
   <button style={styles.editBtn} onClick={() => navigate("/profile/edit")}>
     Edit Profile
   </button>
-  <button style={{ ...styles.editBtn, background: '#f3f4f6', color: '#ca7272' }} onClick={() => navigate("/dashboard")}>
+  <button style={{ ...styles.editBtn, background: '#f3f4f6', color: '#111' }} onClick={() => navigate("/dashboard")}>
     Dashboard
   </button>
 </div>
