@@ -15,7 +15,7 @@ body { background: #e9e9e9; }
 /* LEFT */
 .left {
   width: 55%;
-  background: linear-gradient(180deg, #581b84, #ff642d);
+  background: linear-gradient(180deg, #581b84, #46403e);
   position: relative; overflow: hidden;
   display: flex; justify-content: center; align-items: center;
 }
