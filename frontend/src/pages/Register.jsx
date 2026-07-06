@@ -63,7 +63,7 @@ export default function Register() {
             ))}
           </div>
 
-          {error && <div style={{ background: "#fef2f2", color: "#dc2626", padding: "10px 14px", borderRadius: 8, fontSize: 14, marginBottom: 20 }}>{error}</div>}
+          {error && <div style={{ background: "#6e6e6e", color: "#dc2626", padding: "10px 14px", borderRadius: 8, fontSize: 14, marginBottom: 20 }}>{error}</div>}
 
           {step === 1 ? (
             <div>
@@ -80,7 +80,7 @@ export default function Register() {
               <button onClick={() => { if (!role) return setError("Please select a role"); setError(""); setStep(2); }}
                 style={{ width: "100%", padding: 13, background: "#4f46e5", color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
                 Continue
-              </button>
+              </button> 
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
