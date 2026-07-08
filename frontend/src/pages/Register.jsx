@@ -105,7 +105,6 @@ export default function Register() {
                       placeholder="Full name" />
                   </div>
                 </div>
-
                 {role === "institute" && (
                   <div>
                     <label style={{ fontSize: 13, fontWeight: 600, color: "#374151", display: "block", marginBottom: 6 }}>Institute Name *</label>
