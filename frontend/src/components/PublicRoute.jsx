@@ -7,4 +7,5 @@ const PublicRoute = ({ children }) => {
   return user ? <Navigate to="/dashboard" replace /> : children
 }
 
+
 export default PublicRoute
