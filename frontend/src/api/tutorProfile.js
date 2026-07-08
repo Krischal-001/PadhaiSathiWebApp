@@ -44,5 +44,6 @@ export const updateProfile = async (data) => {
     },
     body: JSON.stringify(data),
   });
+  
   return res.json();
 };
