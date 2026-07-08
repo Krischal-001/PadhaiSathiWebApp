@@ -59,7 +59,6 @@ export default function Login() {
               {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>
-
           <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "24px 0" }}>
             <div style={{ flex: 1, height: 1, background: "#e5e7eb" }}></div>
             <span style={{ fontSize: 12, color: "#9ca3af" }}>OR</span>
