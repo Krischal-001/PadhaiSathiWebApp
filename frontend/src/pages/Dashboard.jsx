@@ -341,7 +341,6 @@ function GenericDashboard({ user, bookings, loading, navigate }) {
   );
 }
 
-// ─── MAIN DASHBOARD ──────────────────────────────────────────────────────────
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
