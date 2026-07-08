@@ -11,6 +11,7 @@ const ROLE_COLOR = {
   institute: { bg: "#fef3c7", color: "#92400e" },
   admin: { bg: "#fee2e2", color: "#991b1b" },
 };
+
 const STATUS_COLOR = {
   pending: { bg: "#fef3c7", color: "#92400e" },
   confirmed: { bg: "#d1fae5", color: "#065f46" },
