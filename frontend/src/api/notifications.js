@@ -17,6 +17,7 @@ export const markAllRead = async () => {
     const res = await fetch(`${API_URL}/notifications/read-all`, { method: "PATCH", headers: h() });
     return res.json();
   } catch {
+    
     return {};
   }
 };
