@@ -59,6 +59,7 @@ export default function Home() {
               Search
             </button>
           </div>
+          
           {/* Quick subject tags */}
           <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
             {QUICK_SUBJECTS.map(s => (
