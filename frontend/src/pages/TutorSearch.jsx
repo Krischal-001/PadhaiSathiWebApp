@@ -18,7 +18,7 @@ export default function TutorSearch() {
     setLoading(false);
   };
 
-  useEffect(() => { load(); }, []); // eslint-disable-line
+  useEffect(() => { load(); }, []);
 
   const handleFilter = (key, val) => {
     const updated = { ...filters, [key]: val };
