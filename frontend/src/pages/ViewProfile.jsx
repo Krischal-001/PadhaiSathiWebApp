@@ -49,7 +49,6 @@ export default function ViewProfile() {
             {profile.is_available ? "✅ Available" : "❌ Unavailable"}
           </span>
         </div>
-
         {profile.subjects?.length > 0 && (
           <div style={styles.subjectSection}>
             <p style={styles.subjectTitle}>Subjects</p>
