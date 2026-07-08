@@ -12,7 +12,6 @@ body { background: #e9e9e9; }
 
 .main { display: flex; height: 90vh; border-radius: 12px; overflow: hidden; }
 
-/* LEFT */
 .left {
   width: 55%;
   background: linear-gradient(180deg, #581b84, #46403e);
@@ -49,7 +48,6 @@ body { background: #e9e9e9; }
 .c1 { width: 200px; height: 200px; bottom: -50px; right: -50px; }
 .c2 { width: 120px; height: 120px; bottom: 60px; left: 20px; }
 
-/* RIGHT */
 .right {
   width: 45%; background: #f0f0f0;
   display: flex; flex-direction: column;
