@@ -143,7 +143,6 @@ export default function TutorPublicProfile() {
                   {tutor.bio}
                 </p>
               )}
-
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                 {tutor.subjects?.map(s => (
                   <span key={s.id} style={{ padding: "4px 12px", background: "#ede9fe", color: "#4f46e5", borderRadius: 20, fontSize: 13, fontWeight: 600 }}>
