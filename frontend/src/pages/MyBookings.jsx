@@ -145,7 +145,6 @@ useEffect(() => { load(); }, []); // eslint-disable-line
                     </button>
                   )}
                 </div>
-
               </div>
             );
           })}
