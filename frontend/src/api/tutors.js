@@ -6,6 +6,7 @@ export const searchTutors = async (filters = {}) => {
   const res = await fetch(`${API_URL}/tutors?${params}`, {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
+  
   return res.json();
 };
 
@@ -13,5 +14,6 @@ export const getTutorById = async (id) => {
   const res = await fetch(`${API_URL}/tutors/${id}`, {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
+
   return res.json();
 };
