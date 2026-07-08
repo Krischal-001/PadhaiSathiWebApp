@@ -62,7 +62,6 @@ export default function NotificationBell() {
           </span>
         )}
       </button>
-
       {open && (
         <div style={{
           position: "absolute", right: 0, top: 44, width: 320,
@@ -101,7 +100,6 @@ export default function NotificationBell() {
               ))
             )}
           </div>
-
           {data.notifications.length > 0 && (
             <div style={{ padding: "10px 18px", borderTop: "1px solid #f3f4f6", textAlign: "center" }}>
               <button onClick={() => markAllRead()}
