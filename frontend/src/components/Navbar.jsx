@@ -18,6 +18,7 @@ export default function Navbar() {
   const handleLogo = () => navigate("/");
   const rc = ROLE_COLORS[user?.role] || ROLE_COLORS.student;
 
+  
   const navLinks = user ? [
     { label: "Dashboard", path: "/dashboard" },
     { label: "Find Tutors", path: "/tutors" },
