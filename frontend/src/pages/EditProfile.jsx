@@ -53,6 +53,7 @@ export default function EditProfile() {
       <h2 style={styles.heading}>Edit Your Profile</h2>
       {error && <p style={styles.error}>{error}</p>}
       <form onSubmit={handleSubmit} style={styles.form}>
+        
         <label style={styles.label}>Bio</label>
         <textarea
           style={styles.textarea}
@@ -116,7 +117,7 @@ export default function EditProfile() {
             </button>
           ))}
         </div>
-
+      
         <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
           <button type="submit" style={styles.submitBtn} disabled={loading}>
             {loading ? "Saving..." : "Save Changes"}
