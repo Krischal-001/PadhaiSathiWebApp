@@ -37,7 +37,6 @@ const AppRoutes = () => (
     </Routes>
   </>
 );
-
 function App() {
   return (
     <BrowserRouter>
