@@ -43,7 +43,6 @@ body { font-family: 'Segoe UI', sans-serif; background: #f0f4ff; }
 .auth-switch a { color: #4f46e5; font-weight: 600; text-decoration: none; }
 .auth-switch a:hover { text-decoration: underline; }
 .loading { display: flex; justify-content: center; align-items: center; height: 100vh; }
-
 .dashboard { min-height: 100vh; background: #f0f4ff; }
 .dashboard-header {
   display: flex; justify-content: space-between; align-items: center;
