@@ -54,7 +54,6 @@ const getAllBookings = async (req, res) => {
   }
 };
 
-// PATCH /api/admin/users/:id/verify
 const verifyUser = async (req, res) => {
   const { id } = req.params;
   try {
