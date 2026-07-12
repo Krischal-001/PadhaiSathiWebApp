@@ -64,8 +64,6 @@ const verifyUser = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
-// DELETE /api/admin/users/:id
 const deleteUser = async (req, res) => {
   const { id } = req.params;
   try {
