@@ -5,5 +5,4 @@ const { searchTutors, getTutorById } = require("../controllers/tutorSearchContro
 
 router.get("/", protect, searchTutors);
 router.get("/:id", protect, getTutorById);
-
 module.exports = router;
