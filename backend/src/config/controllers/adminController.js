@@ -34,7 +34,6 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-// GET /api/admin/bookings
 const getAllBookings = async (req, res) => {
   try {
     const result = await pool.query(
