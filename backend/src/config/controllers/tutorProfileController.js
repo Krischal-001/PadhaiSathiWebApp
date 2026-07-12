@@ -1,5 +1,4 @@
 const pool = require("../db");
-
 const createProfile = async (req, res) => {
   const user_id = req.user.id;
   const { bio, hourly_rate, city, experience_years, subject_ids } = req.body;
