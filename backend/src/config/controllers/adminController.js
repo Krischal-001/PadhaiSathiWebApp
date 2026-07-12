@@ -1,6 +1,4 @@
 const pool = require("../db");
-
-// GET /api/admin/stats
 const getStats = async (req, res) => {
   try {
     const [users, bookings, tutors, revenue] = await Promise.all([
