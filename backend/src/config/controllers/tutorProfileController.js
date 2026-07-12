@@ -81,7 +81,6 @@ const getProfileById = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 const updateProfile = async (req, res) => {
   const user_id = req.user.id;
   const { bio, hourly_rate, city, experience_years, is_available, subject_ids } = req.body;
@@ -118,7 +117,6 @@ const updateProfile = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 const getAllSubjects = async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM subjects ORDER BY name");
