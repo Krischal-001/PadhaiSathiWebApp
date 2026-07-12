@@ -1,5 +1,4 @@
 const pool = require("../db");
-
 const createReview = async (req, res) => {
   const { booking_id, rating, comment } = req.body;
   const reviewer_id = req.user.id;
