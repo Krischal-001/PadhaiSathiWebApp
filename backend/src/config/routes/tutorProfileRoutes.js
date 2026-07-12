@@ -14,5 +14,4 @@ router.post("/", protect, createProfile);
 router.get("/me", protect, getMyProfile);
 router.get("/:id", protect, getProfileById);
 router.put("/", protect, updateProfile);
-
 module.exports = router;
