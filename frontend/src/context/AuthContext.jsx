@@ -2,7 +2,10 @@ import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 
 const AuthContext = createContext(null);
-const API = import.meta.env.VITE_API_URL;
+
+// Base API URL (backend routes are mounted under /api)
+const API = "http://localhost:5001/api";
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -11,7 +14,11 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem("token");
     const saved = localStorage.getItem("user");
     if (token && saved) {
-      try { setUser(JSON.parse(saved)); } catch { localStorage.clear(); }
+      try {
+        setUser(JSON.parse(saved));
+      } catch {
+        localStorage.clear();
+      }
     }
     setLoading(false);
   }, []);
@@ -47,7 +54,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, register, login, logout, updateUser }}>
+    <AuthContext.Provider
+      value={{ user, loading, register, login, logout, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

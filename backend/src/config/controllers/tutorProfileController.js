@@ -68,7 +68,7 @@ const getProfileById = async (req, res) => {
        FROM tutor_profiles tp
        LEFT JOIN tutor_subjects ts ON ts.tutor_profile_id = tp.id
        LEFT JOIN subjects s ON s.id = ts.subject_id
-       WHERE tp.id = $1
+       WHERE tp.user_id = $1
        GROUP BY tp.id`,
       [id]
     );
