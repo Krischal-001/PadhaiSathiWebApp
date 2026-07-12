@@ -73,8 +73,6 @@ const deleteUser = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
-// PATCH /api/admin/bookings/:id/status
 const updateBooking = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
