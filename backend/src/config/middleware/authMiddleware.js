@@ -17,5 +17,4 @@ const protect = (req, res, next) => {
     return res.status(401).json({ message: "Token invalid or expired" });
   }
 };
-
 module.exports = { protect };
