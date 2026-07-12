@@ -33,7 +33,6 @@ const createProfile = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 const getMyProfile = async (req, res) => {
   const user_id = req.user.id;
   try {
