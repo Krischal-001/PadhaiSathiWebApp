@@ -5,5 +5,4 @@ const { getMyNotifications, markAllRead } = require("../controllers/notification
 
 router.get("/", protect, getMyNotifications);
 router.patch("/read-all", protect, markAllRead);
-
 module.exports = router;
