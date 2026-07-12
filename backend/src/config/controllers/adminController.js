@@ -86,5 +86,4 @@ const updateBooking = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 module.exports = { getStats, getAllUsers, getAllBookings, verifyUser, deleteUser, updateBooking };
