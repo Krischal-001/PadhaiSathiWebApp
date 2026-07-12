@@ -21,7 +21,6 @@ const getStats = async (req, res) => {
   }
 };
 
-// GET /api/admin/users
 const getAllUsers = async (req, res) => {
   try {
     const result = await pool.query(
