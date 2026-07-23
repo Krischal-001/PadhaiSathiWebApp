@@ -83,7 +83,7 @@ async function testCreateBookingNoAuth() {
 async function testGetMyBookingsAsStudent() {
   console.log("\n[BOOKING] Get bookings (as student)");
   try {
-    const res = await axios.get(`${API}/bookings`, {
+    const res = await axios.get(`${API}/bookings/my`, {
       headers: { Authorization: `Bearer ${studentToken}` },
     });
     console.log("  PASS - Bookings found:", res.data.length ?? "unknown format");
@@ -97,7 +97,7 @@ async function testGetMyBookingsAsStudent() {
 async function testGetMyBookingsAsTutor() {
   console.log("\n[BOOKING] Get bookings (as tutor)");
   try {
-    const res = await axios.get(`${API}/bookings`, {
+    const res = await axios.get(`${API}/bookings/my`, {
       headers: { Authorization: `Bearer ${tutorToken}` },
     });
     console.log("  PASS - Bookings found:", res.data.length ?? "unknown format");
@@ -115,8 +115,8 @@ async function testUpdateBookingStatus() {
   }
   console.log("\n[BOOKING] Tutor confirms booking status");
   try {
-    const res = await axios.put(
-      `${API}/bookings/${bookingId}`,
+    const res = await axios.patch(
+      `${API}/bookings/${bookingId}/status`,
       { status: "confirmed" },
       { headers: { Authorization: `Bearer ${tutorToken}` } }
     );

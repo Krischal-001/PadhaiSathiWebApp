@@ -17,4 +17,4 @@ CREATE TABLE IF NOT EXISTS bookings (
 
 CREATE INDEX IF NOT EXISTS idx_bookings_student ON bookings(student_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_tutor   ON bookings(tutor_id);
-CREATE INDEX IF NOT EXISTS idx_bookings_status  ON bookings(status);psql -U postgres -d padhai_sathi -f db/migrations/create_bookings.sql
+CREATE INDEX IF NOT EXISTS idx_bookings_status  ON bookings(status);
